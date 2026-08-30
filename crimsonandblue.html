@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salt &amp; Spine Yoga — Scaravelli Yoga in Brighton</title>
+<meta name="description" content="Scaravelli-inspired yoga classes in Brighton. Small, unhurried groups exploring breath, weight and the natural wave of the spine.">
+
+<!-- Fonts: Fraunces (display, organic serif) + Karla (body, humanist sans) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Font Awesome for social + contact icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+  /* ---------- Design tokens ---------- */
+  :root{
+    --ink:        #2F2C4A;   /* deep navy-indigo   */
+    --ink-2:      #3B3860;
+    --berry:      #AE3C50;   /* muted rose/berry   */
+    --terracotta: #C78068;   /* warm clay          */
+    --olive:      #798323;   /* primary accent     */
+    --deep-olive: #5A5E21;
+    --crimson:    #BB0133;   /* CTA / booking      */
+    --umber:      #6C5F48;   /* warm brown         */
+    --taupe:      #8C8064;   /* muted neutral      */
+    --espresso:   #433421;   /* darkest brown      */
+    --paper:      #F6EBE7;   /* blush background (Dusty Rose) */
+    --paper-2:    #EED9D2;   /* deeper blush/cards */
+    --cream:      #FBF7EF;
+
+    /* Dusty Rose scheme: berry replaces navy as the structural color,
+       olive replaces crimson as the accent/CTA color */
+    --structural:   var(--berry);
+    --accent:       var(--olive);
+    --accent-hover: var(--deep-olive);
+
+    --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+    --font-body: "Karla", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+    --wrap: 1180px;
+    --radius: 3px;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    font-family:var(--font-body);
+    color:var(--espresso);
+    background:var(--paper);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{ max-width:100%; display:block; }
+  a{ color:inherit; text-decoration:none; }
+  .wrap{ max-width:var(--wrap); margin:0 auto; padding:0 28px; }
+  h1,h2,h3{ font-family:var(--font-display); font-weight:500; margin:0; }
+  em{ font-style:italic; color:var(--accent); }
+
+  .eyebrow{
+    display:inline-block;
+    font-family:var(--font-body);
+    font-weight:700;
+    font-size:12.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:14px;
+  }
+  section .eyebrow.on-dark{ color:var(--terracotta); }
+
+  /* Signature wave underline used beneath headings */
+  .wave-rule{ display:block; width:96px; height:14px; margin-top:16px; }
+  .wave-rule path{ fill:none; stroke-width:3; stroke-linecap:round; }
+
+  /* Signature section-divider wave (echoes the undulating spine of Scaravelli practice) */
+  .divider{ display:block; width:100%; line-height:0; }
+  .divider svg{ width:100%; height:64px; display:block; }
+
+  /* Reveal-on-scroll */
+  .reveal{ opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.is-visible{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+    html{ scroll-behavior:auto; }
+  }
+
+  /* Focus visibility */
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:14px 28px;
+    border-radius:var(--radius);
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:15px;
+    letter-spacing:.02em;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:transform .25s ease, background .25s ease, color .25s ease, border-color .25s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn-primary{ background:var(--accent); color:var(--cream); }
+  .btn-primary:hover{ background:var(--accent-hover); }
+  .btn-ghost-light{ border-color:rgba(251,247,239,.55); color:var(--cream); }
+  .btn-ghost-light:hover{ background:rgba(251,247,239,.12); }
+  .btn-text{ font-weight:700; color:var(--espresso); border-bottom:2px solid var(--olive); border-radius:0; padding:2px 0; }
+  .btn-text:hover{ color:var(--deep-olive); }
+
+  /* ---------- Nav ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    padding:22px 0;
+    transition:background .35s ease, padding .35s ease, box-shadow .35s ease;
+  }
+  header.is-scrolled{
+    background:rgba(246,235,231,.94);
+    backdrop-filter:blur(6px);
+    padding:14px 0;
+    box-shadow:0 6px 24px rgba(174,60,80,.08);
+  }
+  header .wrap{ display:flex; align-items:center; justify-content:space-between; }
+  .logo{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-weight:500;
+    font-size:22px;
+    color:var(--cream);
+    transition:color .35s ease;
+  }
+  header.is-scrolled .logo{ color:var(--structural); }
+  .logo span{ color:var(--terracotta); font-style:normal; }
+
+  nav.primary-nav ul{
+    list-style:none; display:flex; gap:34px; margin:0; padding:0;
+    align-items:center;
+  }
+  nav.primary-nav a:not(.btn){
+    font-weight:600; font-size:14.5px; letter-spacing:.02em;
+    color:var(--cream);
+    padding-bottom:3px;
+    border-bottom:2px solid transparent;
+    transition:color .35s ease, border-color .25s ease;
+  }
+  header.is-scrolled nav.primary-nav a:not(.btn){ color:var(--espresso); }
+  nav.primary-nav a:not(.btn):hover{ border-color:var(--accent); }
+
+  .nav-toggle{
+    display:none;
+    background:none; border:0; cursor:pointer;
+    font-size:22px; color:var(--cream);
+    transition:color .35s ease;
+  }
+  header.is-scrolled .nav-toggle{ color:var(--structural); }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex; align-items:flex-end;
+    background:var(--structural);
+    overflow:hidden;
+  }
+  .hero-media{
+    position:absolute; inset:0;
+    background-image:url('images/hero.jpg');
+    background-size:cover; background-position:center 30%;
+  }
+  .hero-media::after{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      linear-gradient(0deg, rgba(174,60,80,.92) 4%, rgba(174,60,80,.45) 46%, rgba(174,60,80,.28) 100%);
+  }
+  .hero-content{
+    position:relative; z-index:2;
+    padding:170px 0 108px;
+    max-width:760px;
+  }
+  .hero h1{
+    color:var(--cream);
+    font-size:clamp(34px, 5.4vw, 62px);
+    line-height:1.12;
+    letter-spacing:-.01em;
+  }
+  .hero p.lede{
+    color:rgba(251,247,239,.86);
+    font-size:18px;
+    max-width:520px;
+    margin:22px 0 34px;
+  }
+  .hero-ctas{ display:flex; flex-wrap:wrap; gap:16px; }
+  .scroll-cue{
+    position:absolute; z-index:2; right:32px; bottom:28px;
+    color:rgba(251,247,239,.75);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+  }
+  .scroll-cue i{ animation:bob 2.2s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(6px);} }
+  @media (prefers-reduced-motion: reduce){ .scroll-cue i{ animation:none; } }
+
+  /* ---------- About ---------- */
+  .about{ background:var(--paper); padding:96px 0 108px; }
+  .about-grid{
+    display:grid; grid-template-columns:.85fr 1.15fr; gap:64px; align-items:center;
+  }
+  .about-media{ position:relative; }
+  .about-media img{ border-radius:6px; }
+  .about-media .frame{
+    position:absolute; inset:18px -18px -18px 18px;
+    border:2px solid var(--olive);
+    border-radius:6px; z-index:-1;
+  }
+  .about h2{ font-size:clamp(28px,3.2vw,38px); color:var(--structural); }
+  .about-body p{ max-width:56ch; }
+  .about-body p + p{ margin-top:16px; }
+  .credentials{
+    margin-top:28px; padding-top:24px; border-top:1px solid rgba(67,52,33,.18);
+    font-size:13px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--deep-olive);
+    display:flex; flex-wrap:wrap; gap:10px 22px;
+  }
+
+  /* ---------- Gallery preview ---------- */
+  .gallery{ background:var(--umber); padding:100px 0 110px; color:var(--cream); }
+  .gallery-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:24px; flex-wrap:wrap; margin-bottom:46px; }
+  .gallery h2{ color:var(--cream); font-size:clamp(28px,3.2vw,38px); }
+  .gallery-sub{ color:rgba(251,247,239,.78); max-width:44ch; }
+
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    grid-auto-rows:130px;
+    gap:14px;
+  }
+  .tile{
+    position:relative; overflow:hidden; border-radius:5px;
+    grid-column:span 2; grid-row:span 2;
+  }
+  .tile:nth-child(1){ grid-column:span 3; grid-row:span 3; }
+  .tile:nth-child(2){ grid-column:span 3; grid-row:span 2; }
+  .tile:nth-child(3){ grid-column:span 3; grid-row:span 2; }
+  .tile:nth-child(4){ grid-column:span 2; grid-row:span 3; }
+  .tile:nth-child(5){ grid-column:span 4; grid-row:span 3; }
+
+  .tile img{
+    width:100%; height:100%; object-fit:cover;
+    transition:transform .6s ease;
+  }
+  .tile:hover img{ transform:scale(1.06); }
+  .tile .tint{
+    position:absolute; inset:0;
+    mix-blend-mode:multiply;
+    opacity:.62;
+    transition:opacity .4s ease;
+  }
+  .tile:hover .tint{ opacity:.32; }
+  .tile:nth-child(1) .tint{ background:var(--berry); }
+  .tile:nth-child(2) .tint{ background:var(--olive); }
+  .tile:nth-child(3) .tint{ background:var(--taupe); }
+  .tile:nth-child(4) .tint{ background:var(--terracotta); }
+  .tile:nth-child(5) .tint{ background:var(--deep-olive); }
+  .tile .tile-label{
+    position:absolute; left:14px; bottom:12px; z-index:2;
+    font-size:12px; letter-spacing:.08em; text-transform:uppercase; font-weight:700;
+    color:var(--cream);
+  }
+  .gallery-cta{ margin-top:42px; text-align:center; }
+
+  /* ---------- Testimonials ---------- */
+  .testimonials{ background:var(--paper-2); padding:100px 0 108px; }
+  .testimonials-head{ max-width:640px; margin:0 auto 52px; text-align:center; }
+  .testimonials-head h2{ font-size:clamp(28px,3.2vw,38px); color:var(--structural); }
+  .testimonials-head .wave-rule{ margin-left:auto; margin-right:auto; }
+
+  .t-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
+  .t-card{
+    background:var(--cream);
+    border-radius:6px;
+    padding:34px 30px;
+    position:relative;
+    box-shadow:0 14px 30px rgba(67,52,33,.06);
+  }
+  .t-card .mark{
+    font-family:var(--font-display); font-style:italic;
+    font-size:52px; color:var(--accent); line-height:1; opacity:.9;
+    display:block; margin-bottom:6px;
+  }
+  .t-card p.quote{ font-size:15.5px; color:var(--espresso); margin:0 0 20px; }
+  .t-card .who{ font-weight:700; font-size:14px; color:var(--structural); }
+  .t-card .where{ font-size:12.5px; color:var(--taupe); text-transform:uppercase; letter-spacing:.05em; }
+
+  /* ---------- Footer ---------- */
+  footer{ background:var(--structural); color:var(--cream); padding:86px 0 0; }
+  .footer-grid{
+    display:grid; grid-template-columns:1.3fr 1fr 1.2fr 1fr; gap:48px;
+    padding-bottom:56px; border-bottom:1px solid rgba(251,247,239,.14);
+  }
+  footer h4{
+    font-family:var(--font-body); font-size:13px; font-weight:700;
+    letter-spacing:.12em; text-transform:uppercase; color:var(--terracotta);
+    margin:0 0 20px;
+  }
+  .foot-brand .logo{ color:var(--cream); }
+  .foot-brand p{ color:rgba(251,247,239,.72); max-width:32ch; margin:16px 0 22px; font-size:14.5px; }
+  .social-row{ display:flex; gap:12px; }
+  .social-row a{
+    width:38px; height:38px; border-radius:50%;
+    border:1px solid rgba(251,247,239,.3);
+    display:flex; align-items:center; justify-content:center;
+    transition:background .25s ease, border-color .25s ease, transform .25s ease;
+  }
+  .social-row a:hover{ background:var(--accent); border-color:var(--accent); transform:translateY(-2px); }
+
+  footer ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
+  footer ul a{ color:rgba(251,247,239,.82); font-size:14.5px; }
+  footer ul a:hover{ color:var(--terracotta); }
+
+  .contact-list{ display:flex; flex-direction:column; gap:14px; }
+  .contact-list li{ display:flex; gap:12px; align-items:flex-start; font-size:14.5px; color:rgba(251,247,239,.82); list-style:none; }
+  .contact-list i{ color:var(--terracotta); margin-top:3px; width:16px; }
+
+  .foot-bottom{
+    padding:24px 0 30px;
+    display:flex; flex-wrap:wrap; gap:14px 28px; align-items:center; justify-content:space-between;
+    font-size:13px; color:rgba(251,247,239,.6);
+  }
+  .foot-bottom .legal{ display:flex; gap:22px; flex-wrap:wrap; }
+  .foot-bottom a:hover{ color:var(--terracotta); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:980px){
+    .about-grid{ grid-template-columns:1fr; gap:40px; }
+    .about-media{ max-width:420px; }
+    .t-grid{ grid-template-columns:1fr; max-width:520px; margin:0 auto; }
+    .footer-grid{ grid-template-columns:1fr 1fr; row-gap:40px; }
+  }
+  @media (max-width:760px){
+    nav.primary-nav{
+      position:fixed; inset:0 0 0 auto; width:min(78vw,320px);
+      background:var(--structural); padding:100px 32px 40px;
+      transform:translateX(100%); transition:transform .4s ease;
+      z-index:99;
+    }
+    nav.primary-nav.is-open{ transform:translateX(0); }
+    nav.primary-nav ul{ flex-direction:column; align-items:flex-start; gap:22px; }
+    nav.primary-nav a:not(.btn){ color:var(--cream) !important; font-size:17px; }
+    .nav-toggle{ display:block; }
+    .gallery-grid{ grid-template-columns:repeat(2,1fr); grid-auto-rows:150px; }
+    .tile:nth-child(n){ grid-column:span 1; grid-row:span 2; }
+    .tile:nth-child(1),.tile:nth-child(5){ grid-column:span 2; }
+    .footer-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header id="site-header">
+  <div class="wrap">
+    <a href="#top" class="logo">Salt <span>&amp;</span> Spine</a>
+    <nav class="primary-nav" id="primary-nav">
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <!-- Point this at your Systeme.io booking page / calendar -->
+        <li><a href="#" class="btn btn-primary">Book now</a></li>
+      </ul>
+    </nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-nav">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero-media" role="img" aria-label="Yoga student in a supported shoulder stand pose on grass, surrounded by hills"></div>
+  <div class="wrap hero-content reveal">
+    <span class="eyebrow" style="color:var(--terracotta)">Scaravelli Yoga · Brighton</span>
+    <h1>Yoga that moves <em>with</em> gravity, not against it.</h1>
+    <p class="lede">Small, unhurried classes exploring breath, weight and the natural wave of the spine — the Scaravelli way. No forcing, no fixed shapes to chase. Just your body, learning to let go.</p>
+    <div class="hero-ctas">
+      <!-- Replace with your Systeme.io booking link or embed the calendar widget directly -->
+      <a href="#" class="btn btn-primary"><i class="fa-regular fa-calendar-check"></i> Book a class</a>
+      <a href="#about" class="btn btn-ghost-light">Meet your teacher</a>
+    </div>
+  </div>
+  <div class="scroll-cue"><span>Scroll</span><i class="fa-solid fa-chevron-down"></i></div>
+</section>
+
+<!-- Signature wave divider: hero (structural) into about (paper) -->
+<div class="divider" style="background:var(--paper)">
+  <svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,0 L0,34 C150,58 350,4 600,30 C850,56 1050,6 1200,32 L1200,0 Z" fill="var(--structural)"/></svg>
+</div>
+
+<!-- ============ ABOUT ============ -->
+<section class="about" id="about">
+  <div class="wrap about-grid">
+    <div class="about-media reveal">
+      <img src="images/about.jpg" alt="Yoga student folding forward in a supported pose outdoors, grounded and relaxed">
+      <div class="frame" aria-hidden="true"></div>
+    </div>
+    <div class="about-body reveal">
+      <span class="eyebrow">About the practice</span>
+      <h2>Less effort. More listening.</h2>
+      <svg class="wave-rule" viewBox="0 0 96 14"><path d="M2,7 Q14,1 26,7 T50,7 T74,7 T96,7" stroke="var(--olive)"/></svg>
+      <div style="margin-top:22px;">
+        <p>Developed by Vanda Scaravelli, this approach treats the spine less like a rigid pole and more like a wave — something that lengthens and curves as you breathe, rather than something to be held in place. There's no pushing into a "correct" shape. Instead, we use breath, gravity and patience to let the body soften and open on its own terms.</p>
+        <p>I'm a Brighton-based teacher trained in the Scaravelli lineage, running small classes by the sea for people who want yoga without the performance — whatever your age, flexibility or experience.</p>
+      </div>
+      <div class="credentials">
+        <span>Scaravelli-lineage trained</span>
+        <span>·</span>
+        <span>Groups of 8 or fewer</span>
+        <span>·</span>
+        <span>All bodies welcome</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Signature wave divider: about (paper) into gallery (umber) -->
+<div class="divider" style="background:var(--umber)">
+  <svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,0 L0,30 C200,4 400,58 650,28 C900,0 1050,50 1200,26 L1200,0 Z" fill="var(--paper)"/></svg>
+</div>
+
+<!-- ============ GALLERY (preview only) ============ -->
+<section class="gallery" id="gallery">
+  <div class="wrap">
+    <div class="gallery-head reveal">
+      <div>
+        <span class="eyebrow on-dark">In the room</span>
+        <h2>A glimpse of practice</h2>
+      </div>
+      <p class="gallery-sub">A few moments from mats, workshops and outdoor sessions around Brighton. This is a small selection — the full gallery has more.</p>
+    </div>
+
+    <!-- NOTE: these five tiles are placeholders built from one sample photo with colour "duotone" tints
+         so the layout is easy to preview. Swap each src for a real gallery photo, and remove the
+         .tint div (or set its opacity to 0) once real images are in place. -->
+    <div class="gallery-grid reveal">
+      <div class="tile"><img src="images/hero.jpg" alt="Studio placeholder photo 1 — replace with a real gallery image"><div class="tint"></div><span class="tile-label">Sunrise session</span></div>
+      <div class="tile"><img src="images/hero.jpg" alt="Studio placeholder photo 2 — replace with a real gallery image"><div class="tint"></div><span class="tile-label">Breath &amp; ground</span></div>
+      <div class="tile"><img src="images/hero.jpg" alt="Studio placeholder photo 3 — replace with a real gallery image"><div class="tint"></div><span class="tile-label">Studio, Brighton</span></div>
+      <div class="tile"><img src="images/hero.jpg" alt="Studio placeholder photo 4 — replace with a real gallery image"><div class="tint"></div><span class="tile-label">Small groups</span></div>
+      <div class="tile"><img src="images/hero.jpg" alt="Studio placeholder photo 5 — replace with a real gallery image"><div class="tint"></div><span class="tile-label">Outdoor practice</span></div>
+    </div>
+
+    <div class="gallery-cta reveal">
+      <!-- Point this at your full gallery page -->
+      <a href="#" class="btn btn-ghost-light">View the full gallery <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS (preview only) ============ -->
+<section class="testimonials" id="testimonials">
+  <div class="wrap">
+    <div class="testimonials-head reveal">
+      <span class="eyebrow">Student words</span>
+      <h2>What it feels like</h2>
+      <svg class="wave-rule" viewBox="0 0 96 14"><path d="M2,7 Q14,1 26,7 T50,7 T74,7 T96,7" stroke="var(--accent)"/></svg>
+    </div>
+    <!-- Placeholder testimonials — replace with real student quotes and names -->
+    <div class="t-grid reveal">
+      <div class="t-card">
+        <span class="mark">&ldquo;</span>
+        <p class="quote">I'd tried yoga before and always felt like I was doing it wrong. This is the first class where nothing was about getting a shape right — just about noticing my own breath.</p>
+        <div class="who">Hannah R.</div>
+        <div class="where">Kemptown, Brighton</div>
+      </div>
+      <div class="t-card">
+        <span class="mark">&ldquo;</span>
+        <p class="quote">Gentle but genuinely effective. My lower back pain has eased more in a few weeks here than in months of stretching on my own.</p>
+        <div class="who">David M.</div>
+        <div class="where">Hove</div>
+      </div>
+      <div class="t-card">
+        <span class="mark">&ldquo;</span>
+        <p class="quote">Small class sizes make a real difference — there's always time to be looked at properly and adjusted with actual care.</p>
+        <div class="who">Priya S.</div>
+        <div class="where">Brighton</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer id="contact">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="foot-brand">
+        <a href="#top" class="logo">Salt <span>&amp;</span> Spine</a>
+        <p>Scaravelli-inspired yoga in Brighton. Breath, gravity and the natural wave of the spine — no forcing required.</p>
+        <div class="social-row">
+          <!-- Add your real profile links -->
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+          <li><a href="#">Book a class</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Contact</h4>
+        <ul class="contact-list">
+          <li><i class="fa-solid fa-location-dot"></i> <span>Studio address, Brighton, UK</span></li>
+          <li><i class="fa-solid fa-phone"></i> <span>01273 000 000</span></li>
+          <li><i class="fa-solid fa-envelope"></i> <span>hello@saltandspineyoga.co.uk</span></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Classes</h4>
+        <p style="color:rgba(251,247,239,.72); font-size:14.5px; margin:0 0 18px;">Booking and the class calendar are run through Systeme — this button links to it.</p>
+        <a href="#" class="btn btn-primary" style="width:100%; justify-content:center;">Book now</a>
+      </div>
+    </div>
+
+    <div class="foot-bottom">
+      <span>&copy; <span id="year"></span> Salt &amp; Spine Yoga. All rights reserved.</span>
+      <div class="legal">
+        <a href="#">Terms &amp; Conditions</a>
+        <a href="#">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav background on scroll
+  const header = document.getElementById('site-header');
+  const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 40);
+  document.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+
+  // Mobile nav toggle
+  const navToggle = document.getElementById('nav-toggle');
+  const nav = document.getElementById('primary-nav');
+  navToggle.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('is-open');
+    navToggle.setAttribute('aria-expanded', isOpen);
+    navToggle.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+  });
+  nav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+    nav.classList.remove('is-open');
+    navToggle.setAttribute('aria-expanded', false);
+    navToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
+  }));
+
+  // Scroll reveal
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!prefersReduced && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold:0.15 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  } else {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+  }
+
+  // Footer year
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
